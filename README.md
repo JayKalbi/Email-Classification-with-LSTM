@@ -31,7 +31,7 @@ This directory contains the final LSTM `.h5` model and the `tokenizer.pickle` fi
 
 ### Datasets
 
-The datasets use for training the model are stored here. The main ones are stored in a drive folder since they are too big to fit on github. You can download them <a href="https://drive.google.com/drive/folders/1mk04GMZgqG1pIXjEk1yyET0QDdlxf29A?usp=sharing">here.</a>
+The datasets use for training the model are stored here. The main ones are stored in a drive folder since they are too big to fit on github. You can download them <a href="#">here.</a>
 
 ##  Dataset Description
 
@@ -63,12 +63,10 @@ A variety of models we're lightly tested including Decision Trees and Random For
 
 ## Testing
 
-The image below is a snippet of the model predicting given sentences. 
-
-<img src="Figures/predictions.JPG">
+Here, Streamlit deployment link is mentioned.
 
 
 
 ## Future Work
 
-Doc2Vec has been found to boost accuracy in LSTM models. Due to the big memory requirements when fitting the embedding this was not tested but it is something to have in mind for future developments.
+Cloud Deployment and link with Gmail API
