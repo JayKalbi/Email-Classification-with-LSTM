@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+.venv
+.tf29_env
+tf29_env/
+env/
+venv/
+*.env
+*.conda
+*.ipynb_checkpoints/
+
+# VSCode and IDE config
+.vscode/
+.idea/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Compiled model files
+*.h5
+*.hdf5
+
+# Dataset files
+Datasets/*.csv
+
+# Word2Vec or GloVe model files
+Models/*.bin
+Models/*.gz
+Models/*.h5
+
+# Other project directories
+Documents/
+Figures/
+
+# TensorBoard logs
+logs/
+events.out.tfevents.*
+
+# Python cache
+*.log
+*.bak
+*.tmp
+
+# System files
+Thumbs.db
+.DS_Store
+
+# Credentials
+credentials.json

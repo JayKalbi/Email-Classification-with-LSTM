@@ -1,0 +1,12 @@
+# Normalize line endings across platforms
+* text=auto
+
+# Force LF for these file types
+*.py text eol=lf
+*.ipynb text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+
+# Windows batch files with CRLF
+*.bat text eol=crlf
+*.ps1 text eol=crlf
