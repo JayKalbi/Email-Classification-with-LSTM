@@ -54,37 +54,61 @@ def authenticate_gmail():
 
     return build('gmail', 'v1', credentials=creds)
 
-def get_last_10_email_bodies(service):
-    results = service.users().messages().list(userId='me', maxResults=10).execute()
-    messages = results.get('messages', [])
+def get_last_15_email_bodies(service):
     email_bodies = []
+    message_ids = []
+    next_page_token = None
 
-    for msg in messages:
-        msg_data = service.users().messages().get(userId='me', id=msg['id'], format='raw').execute()
-        raw_msg = base64.urlsafe_b64decode(msg_data['raw'].encode('ASCII'))
-        mime_msg = message_from_bytes(raw_msg)
+    # Continue fetching until we get at least 15 valid email bodies
+    while len(email_bodies) < 15:
+        results = service.users().messages().list(
+            userId='me',
+            maxResults=50,
+            pageToken=next_page_token
+        ).execute()
 
-        body = ""
-        if mime_msg.is_multipart():
-            for part in mime_msg.walk():
-                content_type = part.get_content_type()
-                if content_type == 'text/plain':
-                    try:
-                        body = part.get_payload(decode=True).decode()
-                        break
-                    except:
-                        continue
-        else:
-            body = mime_msg.get_payload(decode=True).decode()
+        messages = results.get('messages', [])
+        next_page_token = results.get('nextPageToken')
 
-        if body.strip():
-            email_bodies.append(body.strip())
+        if not messages:
+            break  # No more messages available
+
+        for msg in messages:
+            try:
+                msg_data = service.users().messages().get(userId='me', id=msg['id'], format='raw').execute()
+                raw_msg = base64.urlsafe_b64decode(msg_data['raw'].encode('ASCII'))
+                mime_msg = message_from_bytes(raw_msg)
+
+                body = ""
+                if mime_msg.is_multipart():
+                    for part in mime_msg.walk():
+                        if part.get_content_type() == 'text/plain':
+                            try:
+                                body = part.get_payload(decode=True).decode()
+                                break
+                            except:
+                                continue
+                else:
+                    body = mime_msg.get_payload(decode=True).decode()
+
+                if body.strip():
+                    email_bodies.append(body.strip())
+
+                if len(email_bodies) == 15:
+                    return email_bodies
+
+            except Exception as e:
+                continue  # Skip malformed emails
+
+        if not next_page_token:
+            break  # No more pages to fetch
 
     return email_bodies
 
+
 def classify_emails(email_texts):
     print("\n" + "="*80)
-    print(f"{bcolors.BOLD}{bcolors.OKCYAN}Classifying the Last 10 Emails...{bcolors.ENDC}")
+    print(f"{bcolors.BOLD}{bcolors.OKCYAN}Classifying the Last 15 Emails...{bcolors.ENDC}")
     print("="*80)
 
     for idx, text in enumerate(email_texts, 1):
@@ -103,7 +127,7 @@ def classify_emails(email_texts):
 
 def main():
     service = authenticate_gmail()
-    email_texts = get_last_10_email_bodies(service)
+    email_texts = get_last_15_email_bodies(service)
     classify_emails(email_texts)
 
 if __name__ == '__main__':
